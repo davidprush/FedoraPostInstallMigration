@@ -73,7 +73,7 @@ Thumbs.db
 .kde/share/apps/kmess/customemoticons
 .kde4/share/apps/kmess/customemoticons
 
-
+$HOME/.local/share/kwalletd
 .local/share/tracker
 
 .local/share/torbrowser
