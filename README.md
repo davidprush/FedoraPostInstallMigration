@@ -5,11 +5,15 @@ Helper scripts to transfer KDE system settings, installed apps, user's home dire
 
 ### Network rsync
 
+```bash
 rsync -aP --exclude-from=ignorelist.txt /home/$USER david@192.168.86.10:/mnt/WD16TB/shared/home-backup/david/
+```
 
 ### Physical Transfer Using Media
 
+```bash
 rsync -aP ---exclude-from=ignorelist.txt /home/$USER/ /media/$USER/linuxbackup/home/$USER/
+```
 
 ## transfer-kde-settings.sh
 
