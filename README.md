@@ -23,9 +23,9 @@ rsync -aP ---exclude-from=ignorelist.txt /home/$USER/ /media/$USER/linuxbackup/h
 
 - Edit Variables:
 
-1. Update SOURCE_HOST, SOURCE_USER, TARGET_DIR, SSH_KEY to match your setup.
+  1. Update SOURCE_HOST, SOURCE_USER, TARGET_DIR, SSH_KEY to match your setup.
 
-2. Adjust CONFIG_DIRS, LOCAL_DIRS, or EXCLUDE_FILES if you need specific files or want to include cache.
+  2. Adjust CONFIG_DIRS, LOCAL_DIRS, or EXCLUDE_FILES if you need specific files or want to include cache.
 
 #### Run the Script:
 
