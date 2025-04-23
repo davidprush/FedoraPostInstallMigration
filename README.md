@@ -61,7 +61,7 @@ tar -xzf kde-settings.tar.gz -C ~
 
 ### Troubleshooting: If settings don’t apply correctly, clear the cache (`rm -rf ~/.cache/*`) and restart Plasma.
 
-** This script should cover most KDE settings, but let me know if you need adjustments for specific applications or a different transfer method! **
+*** This script should cover most KDE settings, but let me know if you need adjustments for specific applications or a different transfer method! ***
 
 ## install-packages.sh
 
