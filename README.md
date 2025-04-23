@@ -43,7 +43,7 @@ Execute: `./transfer-kde-settings.sh`
 
 - Version Compatibility: Check KDE Plasma versions with plasmashell --version. Mismatches may cause issues.
 
-** Manual Transfer: If SSH isn’t available, copy files to a USB drive with: **
+**Manual Transfer: If SSH isn’t available, copy files to a USB drive with:**
 
 ```bash
 tar -czf kde-settings.tar.gz ~/.config ~/.local/share
