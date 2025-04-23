@@ -152,14 +152,14 @@ sudo ./install_packages.sh
 
 - Variables:
 
-1. PACKAGE_LIST: Name of the input file (packages.txt).
-2. LOG_FILE: Log file to record installation progress and errors.
-3. ERROR_COUNT and SUCCESS_COUNT: Track the number of failed and successful installations.
+  1. PACKAGE_LIST: Name of the input file (packages.txt).
+  2. LOG_FILE: Log file to record installation progress and errors.
+  3. ERROR_COUNT and SUCCESS_COUNT: Track the number of failed and successful installations.
 
 - Logging Function (log_message):
 
-1. Appends timestamped messages to both the terminal and install_packages.log.
-2. Ensures all actions are recorded for troubleshooting.
+  1. Appends timestamped messages to both the terminal and install_packages.log.
+  2. Ensures all actions are recorded for troubleshooting.
 
 - Root Check (check_root):
 
@@ -171,25 +171,25 @@ Ensures packages.txt exists and is not empty.
 
 - System Update (update_system):
 
-Runs `dnf update -y` to refresh package metadata and apply system updates.
-Continues even if the update fails (non-critical).
+  1. Runs `dnf update -y` to refresh package metadata and apply system updates.
+  2. Continues even if the update fails (non-critical).
 
 - Package Installation (install_packages):
 
-Reads packages.txt line by line, skipping empty lines and comments (lines starting with #).
-Installs each package using dnf install -y.
-Logs success or failure and updates counters.
+  1. Reads packages.txt line by line, skipping empty lines and comments (lines starting with #).
+  2. Installs each package using dnf install -y.
+  3. Logs success or failure and updates counters.
 
 - Error Handling:
 
-1. Checks for missing files, root privileges, and installation failures.
-2. Logs all errors to install_packages.log for review.
-3. Exits with a non-zero status if any installations fail.
+  1. Checks for missing files, root privileges, and installation failures.
+  2. Logs all errors to install_packages.log for review.
+  3. Exits with a non-zero status if any installations fail.
 
 - Summary and Suggestions:
 
-1. Reports the number of successful and failed installations.
-2. Suggests enabling RPM Fusion repositories for third-party software (e.g., multimedia codecs, Steam) if packages are unavailable.
+  1. Reports the number of successful and failed installations.
+  2. Suggests enabling RPM Fusion repositories for third-party software (e.g., multimedia codecs, Steam) if packages are unavailable.
 
 - Example packages.txt
 
