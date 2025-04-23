@@ -103,94 +103,108 @@ If you want a complete list of all installed packages (including dependencies), 
 rpm -qa --qf "%{NAME}\n" | sort > all_packages.txt
 ```
 
-However, this list will be much longer and include system libraries and dependencies, which may not be necessary for reinstallation. The dnf history userinstalled method is generally preferred for user-installed applications.
-Transferring the List
-Once you have packages.txt, transfer it to the new system (e.g., via USB drive, network share, or cloud storage like Google Drive).
-Step 2: Creating the Installation Script
-Below is a Bash script that uses packages.txt to install the listed packages on a new Fedora 42 system. The script includes error handling, logging, and detailed comments to explain each step.
-Script: install_packages.sh
+-- However, this list will be much longer and include system libraries and dependencies, which may not be necessary for reinstallation. The dnf history userinstalled method is generally preferred for user-installed applications. --
 
+### Transferring the List
 
-How to Use the Script
+** Once you have packages.txt, transfer it to the new system (e.g., via USB drive, network share, or cloud storage like Google Drive). **
+
+### Step 2: Creating the Installation Script
+
+Above is a Bash script that uses packages.txt to install the listed packages on a new Fedora 42 system. The script includes error handling, logging, and detailed comments to explain each step.
+
+Script: `install_packages.sh`
+
+#### How to Use the Script
+
 Save the Script:
-Copy the script above into a file named install_packages.sh on the new Fedora 42 system.
+
+** Copy the script above into a file named install_packages.sh on the new Fedora 42 system. **
 
 Example:
-bash
 
+```bash
 nano install_packages.sh
+```
 
-Paste the script, save, and exit.
+- Paste the script, save, and exit.
 
-Make the Script Executable:
-bash
+- Make the Script Executable:
 
+```bash
 chmod +x install_packages.sh
+```
 
-Place the Package List:
-Ensure packages.txt (from Step 1) is in the same directory as the script.
+- Place the Package List:
 
-Run the Script:
-Execute the script with root privileges:
-bash
+** Ensure packages.txt (from Step 1) is in the same directory as the script. **
 
+- Run the Script:
+
+** Execute the script with root privileges: **
+
+```bash
 sudo ./install_packages.sh
+```
 
-Script Features and Explanations
-Shebang (#!/bin/bash): Specifies that the script runs in Bash.
+#### Script Features and Explanations
 
-Variables:
-PACKAGE_LIST: Name of the input file (packages.txt).
+** Shebang (#!/bin/bash): Specifies that the script runs in Bash. **
 
-LOG_FILE: Log file to record installation progress and errors.
+- Variables:
 
-ERROR_COUNT and SUCCESS_COUNT: Track the number of failed and successful installations.
+A. PACKAGE_LIST: Name of the input file (packages.txt).
+B. LOG_FILE: Log file to record installation progress and errors.
+C. ERROR_COUNT and SUCCESS_COUNT: Track the number of failed and successful installations.
 
-Logging Function (log_message):
-Appends timestamped messages to both the terminal and install_packages.log.
+- Logging Function (log_message):
 
-Ensures all actions are recorded for troubleshooting.
+1. Appends timestamped messages to both the terminal and install_packages.log.
+2. Ensures all actions are recorded for troubleshooting.
 
-Root Check (check_root):
+- Root Check (check_root):
+
 Verifies the script is run with sudo, as dnf requires root privileges.
 
-Package List Check (check_package_list):
+- Package List Check (check_package_list):
+
 Ensures packages.txt exists and is not empty.
 
-System Update (update_system):
-Runs dnf update -y to refresh package metadata and apply system updates.
+- System Update (update_system):
 
+Runs `dnf update -y` to refresh package metadata and apply system updates.
 Continues even if the update fails (non-critical).
 
-Package Installation (install_packages):
+- Package Installation (install_packages):
+
 Reads packages.txt line by line, skipping empty lines and comments (lines starting with #).
-
 Installs each package using dnf install -y.
-
 Logs success or failure and updates counters.
 
-Error Handling:
+- Error Handling:
+
 Checks for missing files, root privileges, and installation failures.
-
 Logs all errors to install_packages.log for review.
-
 Exits with a non-zero status if any installations fail.
 
-Summary and Suggestions:
-Reports the number of successful and failed installations.
+- Summary and Suggestions:
 
+Reports the number of successful and failed installations.
 Suggests enabling RPM Fusion repositories for third-party software (e.g., multimedia codecs, Steam) if packages are unavailable.
 
-Example packages.txt
+- Example packages.txt
 
+```
 firefox
 vlc
 gnome-tweaks
 # libreoffice  # Commented out, will be skipped
 gimp
+```
 
-Log File Example (install_packages.log)
+- Log File Example (install_packages.log)
 
+```bash
 Package Installation Log
 [2025-04-23 12:54:01] Script initialized.
 [2025-04-23 12:54:02] Updating system packages...
@@ -210,21 +224,29 @@ Package Installation Log
 [2025-04-23 12:54:30] Note: If some packages are missing, consider enabling third-party repositories (e.g., RPM Fusion).
 [2025-04-23 12:54:30] Run: sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 [2025-04-23 12:54:30]     sudo dnf install https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+```
 
-Step 3: Additional Considerations
-Enabling Third-Party Repositories
-Some applications (e.g., VLC, Steam, or multimedia codecs) may require third-party repositories like RPM Fusion. The script suggests enabling these at the end. To do so manually:
-bash
+#### Step 3: Additional Considerations
 
+- Enabling Third-Party Repositories
+
+** Some applications (e.g., VLC, Steam, or multimedia codecs) may require third-party repositories like RPM Fusion. The script suggests enabling these at the end. To do so manually: **
+
+```bash
 sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 sudo dnf install https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+```
 
-Run these commands before executing the script if you know your packages depend on RPM Fusion.
-Handling Flatpaks or Snaps
+** Run these commands before executing the script if you know your packages depend on RPM Fusion. **
+
+- Handling Flatpaks or Snaps
+
 If you use Flatpak or Snap packages (e.g., from Flathub or Snap Store), these are not managed by dnf. To list installed Flatpaks:
 bash
 
+```bash
 flatpak list --app > flatpaks.txt
+```
 
 To reinstall Flatpaks on the new system:
 bash
