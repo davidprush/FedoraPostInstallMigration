@@ -11,8 +11,6 @@ rsync -aP --exclude-from=ignorelist.txt /home/$USER david@192.168.86.10:/mnt/WD1
 
 rsync -aP ---exclude-from=ignorelist.txt /home/$USER/ /media/$USER/linuxbackup/home/$USER/
 
-
-
 ## transfer-kde-settings.sh
 
 ### How to Use the Script
@@ -33,7 +31,7 @@ rsync -aP ---exclude-from=ignorelist.txt /home/$USER/ /media/$USER/linuxbackup/h
 
 Execute: `./transfer-kde-settings.sh`
 
-** Ensure SSH is configured (e.g., ~/.ssh/id_rsa exists and is authorized on the source). **
+**Ensure SSH is configured (e.g., ~/.ssh/id_rsa exists and is authorized on the source).**
 
 ### Apply Settings:
 
@@ -61,7 +59,7 @@ tar -xzf kde-settings.tar.gz -C ~
 
 ### Troubleshooting: If settings don’t apply correctly, clear the cache (`rm -rf ~/.cache/*`) and restart Plasma.
 
-*** This script should cover most KDE settings, but let me know if you need adjustments for specific applications or a different transfer method! ***
+***This script should cover most KDE settings, but let me know if you need adjustments for specific applications or a different transfer method!***
 
 ## install-packages.sh
 
@@ -71,15 +69,16 @@ Below, I’ll guide you through the process of listing installed programs on Fed
 
 Fedora uses the dnf package manager, which tracks installed packages. To list explicitly installed packages (those you manually installed, excluding dependencies), you can use the dnf history userinstalled command. This is ideal for capturing your intentionally installed applications.
 Command to List Explicitly Installed Packages
-bash
 
-`dnf history userinstalled > packages.txt`
+```bash
+dnf history userinstalled > packages.txt
+```
 
-** Explanation **
+**Explanation**
 
 - dnf history userinstalled: Lists packages that were explicitly installed by the user, omitting automatically installed dependencies.
 
-> packages.txt: Redirects the output to a file named packages.txt in your current directory.
+`> packages.txt`: Redirects the output to a file named packages.txt in your current directory.
 
 The resulting packages.txt file will contain package names, one per line, such as firefox, vlc, or gnome-tweaks.
 
@@ -103,11 +102,11 @@ If you want a complete list of all installed packages (including dependencies), 
 rpm -qa --qf "%{NAME}\n" | sort > all_packages.txt
 ```
 
--- However, this list will be much longer and include system libraries and dependencies, which may not be necessary for reinstallation. The dnf history userinstalled method is generally preferred for user-installed applications. --
+__However, this list will be much longer and include system libraries and dependencies, which may not be necessary for reinstallation. The dnf history userinstalled method is generally preferred for user-installed applications.__
 
 ### Transferring the List
 
-** Once you have packages.txt, transfer it to the new system (e.g., via USB drive, network share, or cloud storage like Google Drive). **
+**Once you have packages.txt, transfer it to the new system (e.g., via USB drive, network share, or cloud storage like Google Drive).**
 
 ### Step 2: Creating the Installation Script
 
@@ -119,7 +118,7 @@ Script: `install_packages.sh`
 
 Save the Script:
 
-** Copy the script above into a file named install_packages.sh on the new Fedora 42 system. **
+**Copy the script above into a file named install_packages.sh on the new Fedora 42 system.**
 
 Example:
 
@@ -137,11 +136,11 @@ chmod +x install_packages.sh
 
 - Place the Package List:
 
-** Ensure packages.txt (from Step 1) is in the same directory as the script. **
+**Ensure packages.txt (from Step 1) is in the same directory as the script.**
 
 - Run the Script:
 
-** Execute the script with root privileges: **
+**Execute the script with root privileges:**
 
 ```bash
 sudo ./install_packages.sh
@@ -149,13 +148,13 @@ sudo ./install_packages.sh
 
 #### Script Features and Explanations
 
-** Shebang (#!/bin/bash): Specifies that the script runs in Bash. **
+**Shebang (#!/bin/bash): Specifies that the script runs in Bash.**
 
 - Variables:
 
-A. PACKAGE_LIST: Name of the input file (packages.txt).
-B. LOG_FILE: Log file to record installation progress and errors.
-C. ERROR_COUNT and SUCCESS_COUNT: Track the number of failed and successful installations.
+1. PACKAGE_LIST: Name of the input file (packages.txt).
+2. LOG_FILE: Log file to record installation progress and errors.
+3. ERROR_COUNT and SUCCESS_COUNT: Track the number of failed and successful installations.
 
 - Logging Function (log_message):
 
@@ -183,14 +182,14 @@ Logs success or failure and updates counters.
 
 - Error Handling:
 
-Checks for missing files, root privileges, and installation failures.
-Logs all errors to install_packages.log for review.
-Exits with a non-zero status if any installations fail.
+1. Checks for missing files, root privileges, and installation failures.
+2. Logs all errors to install_packages.log for review.
+3. Exits with a non-zero status if any installations fail.
 
 - Summary and Suggestions:
 
-Reports the number of successful and failed installations.
-Suggests enabling RPM Fusion repositories for third-party software (e.g., multimedia codecs, Steam) if packages are unavailable.
+1. Reports the number of successful and failed installations.
+2. Suggests enabling RPM Fusion repositories for third-party software (e.g., multimedia codecs, Steam) if packages are unavailable.
 
 - Example packages.txt
 
@@ -230,14 +229,14 @@ Package Installation Log
 
 - Enabling Third-Party Repositories
 
-** Some applications (e.g., VLC, Steam, or multimedia codecs) may require third-party repositories like RPM Fusion. The script suggests enabling these at the end. To do so manually: **
+**Some applications (e.g., VLC, Steam, or multimedia codecs) may require third-party repositories like RPM Fusion. The script suggests enabling these at the end. To do so manually:**
 
 ```bash
 sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 sudo dnf install https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 ```
 
-** Run these commands before executing the script if you know your packages depend on RPM Fusion. **
+**Run these commands before executing the script if you know your packages depend on RPM Fusion.**
 
 - Handling Flatpaks or Snaps
 
@@ -248,45 +247,54 @@ bash
 flatpak list --app > flatpaks.txt
 ```
 
-To reinstall Flatpaks on the new system:
-bash
+#### To reinstall Flatpaks on the new system:
 
+```bash
 xargs -a flatpaks.txt flatpak install -y
+```
 
-Ensure Flathub is enabled:
-bash
+#### Ensure Flathub is enabled:
 
+```bash
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+```
 
-The script above focuses on dnf packages, but you can extend it to handle Flatpaks by adding a similar loop for flatpak install.
-Troubleshooting
-Package Not Found: If a package fails to install, check if it’s available in the default repositories or requires RPM Fusion. Search for it:
-bash
+__The script above focuses on dnf packages, but you can extend it to handle Flatpaks by adding a similar loop for flatpak install.__
 
+### Troubleshooting
+
+- Package Not Found: If a package fails to install, check if it’s available in the default repositories or requires RPM Fusion. Search for it:
+
+```bash
 dnf search package_name
+```
 
-Version Mismatches: Fedora 42 may have newer package versions. The script uses package names (not versions), so it should install the latest available version.
+- Version Mismatches: Fedora 42 may have newer package versions. The script uses package names (not versions), so it should install the latest available version.
 
-Log Review: Check install_packages.log for detailed error messages if any installations fail.
+- **Log Review:** Check install_packages.log for detailed error messages if any installations fail.
 
-Network Issues: Ensure the new system has an internet connection, as dnf downloads packages from online repositories.
+- **Network Issues:** Ensure the new system has an internet connection, as dnf downloads packages from online repositories.
 
-Testing the Script
-Before running the script on the new system, test it on a virtual machine or a non-critical system to ensure it works as expected. You can create a Fedora 42 virtual machine using tools like VirtualBox or GNOME Boxes.
-Summary
-List Installed Packages: Use dnf history userinstalled > packages.txt to capture explicitly installed packages. Edit packages.txt to include only desired applications.
+#### Testing the Script
 
-Installation Script: The provided install_packages.sh script automates package installation with error handling, logging, and user-friendly output. It checks for root privileges, validates the package list, updates the system, and installs packages while tracking successes and failures.
+__Before running the script on the new system, test it on a virtual machine or a non-critical system to ensure it works as expected. You can create a Fedora 42 virtual machine using tools like VirtualBox or GNOME Boxes.__
 
-Additional Steps: Enable RPM Fusion for third-party packages and handle Flatpaks separately if needed.
+## Summary
 
-Troubleshooting: Review install_packages.log for errors and ensure repositories are correctly configured.
+- List Installed Packages: Use dnf history userinstalled > packages.txt to capture explicitly installed packages. Edit packages.txt to include only desired applications.
 
-This approach ensures you can efficiently replicate your Fedora 42 setup on a new system while minimizing manual effort and handling potential errors gracefully.
-Sources:
-Fedora package management documentation
+- Installation Script: The provided install_packages.sh script automates package installation with error handling, logging, and user-friendly output. It checks for root privileges, validates the package list, updates the system, and installs packages while tracking successes and failures.
 
-Community discussions on automating package installation
+- Additional Steps: Enable RPM Fusion for third-party packages and handle Flatpaks separately if needed.
 
-RPM Fusion setup guide
+- Troubleshooting: Review install_packages.log for errors and ensure repositories are correctly configured.
 
+- This approach ensures you can efficiently replicate your Fedora 42 setup on a new system while minimizing manual effort and handling potential errors gracefully.
+
+### Sources:
+
+- Fedora package management documentation
+
+- Community discussions on automating package installation
+
+- RPM Fusion setup guide
