@@ -1,79 +1,107 @@
 # migrate-fedora
 Helper scripts to transfer KDE system settings, installed apps, user's home directory to a new computer using Fedora.
 
+## Migrate Home Directory
+
+### Network rsync
+
+rsync -aP --exclude-from=ignorelist.txt /home/$USER david@192.168.86.10:/mnt/WD16TB/shared/home-backup/david/
+
+### Physical Transfer Using Media
+
+rsync -aP ---exclude-from=ignorelist.txt /home/$USER/ /media/$USER/linuxbackup/home/$USER/
+
+
+
 ## transfer-kde-settings.sh
 
-How to Use the Script
-Save the Script:
-Save it as transfer-kde-settings.sh.
+### How to Use the Script
 
-Make it executable: chmod +x transfer-kde-settings.sh.
+#### Save the Script:
 
-Edit Variables:
-Update SOURCE_HOST, SOURCE_USER, TARGET_DIR, SSH_KEY to match your setup.
+- Save it as transfer-kde-settings.sh.
 
-Adjust CONFIG_DIRS, LOCAL_DIRS, or EXCLUDE_FILES if you need specific files or want to include cache.
+- Make it executable: `chmod +x transfer-kde-settings.sh`
 
-Run the Script:
-Execute: ./transfer-kde-settings.sh.
+- Edit Variables:
 
-Ensure SSH is configured (e.g., ~/.ssh/id_rsa exists and is authorized on the source).
+1. Update SOURCE_HOST, SOURCE_USER, TARGET_DIR, SSH_KEY to match your setup.
 
-Apply Settings:
-Follow the script’s final instructions to log out/in or restart Plasma.
+2. Adjust CONFIG_DIRS, LOCAL_DIRS, or EXCLUDE_FILES if you need specific files or want to include cache.
 
-Additional Notes
-Dependencies: Install rsync and tar on both systems (sudo dnf install rsync tar).
+#### Run the Script:
 
-Version Compatibility: Check KDE Plasma versions with plasmashell --version. Mismatches may cause issues.
+Execute: `./transfer-kde-settings.sh`
 
-Manual Transfer: If SSH isn’t available, copy files to a USB drive with:
-bash
+** Ensure SSH is configured (e.g., ~/.ssh/id_rsa exists and is authorized on the source). **
 
+### Apply Settings:
+
+- Follow the script’s final instructions to log out/in or restart Plasma.
+
+### Additional Notes
+
+- Dependencies: Install rsync and tar on both systems (`sudo dnf install rsync tar`).
+
+- Version Compatibility: Check KDE Plasma versions with plasmashell --version. Mismatches may cause issues.
+
+** Manual Transfer: If SSH isn’t available, copy files to a USB drive with: **
+
+```bash
 tar -czf kde-settings.tar.gz ~/.config ~/.local/share
+```
 
-Then extract on the new system:
-bash
+### Then extract on the new system:
 
+```bash
 tar -xzf kde-settings.tar.gz -C ~
+```
 
-Specific Settings: If you only want specific settings (e.g., only Konsole), modify CONFIG_DIRS and LOCAL_DIRS to include only those files (e.g., .config/konsolerc, .local/share/konsole).
+- Specific Settings: If you only want specific settings (e.g., only Konsole), modify CONFIG_DIRS and LOCAL_DIRS to include only those files (e.g., .config/konsolerc, .local/share/konsole).
 
-Troubleshooting: If settings don’t apply correctly, clear the cache (rm -rf ~/.cache/*) and restart Plasma.
+### Troubleshooting: If settings don’t apply correctly, clear the cache (`rm -rf ~/.cache/*`) and restart Plasma.
 
-This script should cover most KDE settings, but let me know if you need adjustments for specific applications or a different transfer method!
+** This script should cover most KDE settings, but let me know if you need adjustments for specific applications or a different transfer method! **
 
 ## install-packages.sh
+
 Below, I’ll guide you through the process of listing installed programs on Fedora 42 Linux, exporting them to a file, and creating a robust script to reinstall those programs on a new system. The script will include error handling and detailed explanations to ensure clarity and reliability.
-Step 1: Listing Installed Programs on Fedora 42
+
+### Step 1: Listing Installed Programs on Fedora 42
+
 Fedora uses the dnf package manager, which tracks installed packages. To list explicitly installed packages (those you manually installed, excluding dependencies), you can use the dnf history userinstalled command. This is ideal for capturing your intentionally installed applications.
 Command to List Explicitly Installed Packages
 bash
 
-dnf history userinstalled > packages.txt
+`dnf history userinstalled > packages.txt`
 
-Explanation
-dnf history userinstalled: Lists packages that were explicitly installed by the user, omitting automatically installed dependencies.
+** Explanation **
+
+- dnf history userinstalled: Lists packages that were explicitly installed by the user, omitting automatically installed dependencies.
 
 > packages.txt: Redirects the output to a file named packages.txt in your current directory.
 
 The resulting packages.txt file will contain package names, one per line, such as firefox, vlc, or gnome-tweaks.
 
-Notes
+#### Notes
+
 The output may include some system packages or dependencies. You should review and edit packages.txt to include only the applications you want to reinstall on the new system.
 
-To view the file, use:
-bash
+### To view the file, use:
 
+```bash
 cat packages.txt
+```
 
-Edit the file with a text editor (e.g., nano packages.txt) to remove unwanted packages or add comments for clarity.
+Edit the file with a text editor (e.g., `nano packages.txt`) to remove unwanted packages or add comments for clarity.
 
-Alternative Approach
+### Alternative Approach
+
 If you want a complete list of all installed packages (including dependencies), use:
-bash
 
+```bash
 rpm -qa --qf "%{NAME}\n" | sort > all_packages.txt
+```
 
 However, this list will be much longer and include system libraries and dependencies, which may not be necessary for reinstallation. The dnf history userinstalled method is generally preferred for user-installed applications.
 Transferring the List
