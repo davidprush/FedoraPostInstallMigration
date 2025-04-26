@@ -12,7 +12,12 @@ rsync -aP --exclude-from=ignorelist.txt /home/$USER [username]@[ip-or-domain]:/m
 ### Physical Transfer Using Media
 
 ```bash
-rsync -aP ---exclude-from=ignorelist.txt /home/$USER/ /media/$USER/linuxbackup/home/$USER/
+rsync -aP ---exclude-from=ignorelist.txt /home/$USER /media/$USER/linuxbackup/home/$USER
+```
+### Physical Restore Using Media
+
+```bash
+rsync -aAXv --delete  /media/$USER/linuxbackup/home/$USER /home/$USER
 ```
 
 ## transfer-kde-settings.sh
